@@ -1,0 +1,39 @@
+{
+  "name": "aggro-log",
+  "version": "0.1.0",
+  "description": "Log aggregator that outputs logs at a configurable interval",
+  "main": "aggro-log.js",
+  "engines": {
+    "node": "4.x.x"
+  },
+  "scripts": {
+    "test": "nyc -r html -r text --check-coverage --lines 100 --functions 100 --branches 100 npm run -s mocha",
+    "mocha": "mocha -R dot test",
+    "lint": "standard | snazzy",
+    "open-cover": "open coverage/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OmniJeff/aggro-log"
+  },
+  "keywords": [
+    "log",
+    "aggregator",
+    "logging",
+    "aggro"
+  ],
+  "author": "Jeffrey White",
+  "license": "BSD",
+  "dependencies": {
+    "bunyan": "^1.8.1",
+    "hoek": "~4.0.2",
+    "intercept-stdout": "^0.1.2",
+    "joi": "^9.0.4",
+    "object-hash": "^1.1.4"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "mocha": "~2.5.3",
+    "nyc": "~7.1.0"
+  }
+}
