@@ -6,18 +6,21 @@ A log aggregator so you can log summaries of stuff and save space.
 ### example
 
 ```javascript
-    var Bunyan = require('bunyan');
+    var Bunyan = require('bunyan');  // Bunyan is one supported log type
     
-    var cfg = {
+    // configure aggroLog
+    var aggroLogCfg = {
         logger: Bunyan.createLogger({
             name: 'my-bunyan-log'
         }),
         logType: 'bunyan',
-        logIntervalMs: 10000,  // 10 seconds
+        logIntervalMs: 10000,  // emit log summary after 10 seconds
     };
     
-    var aggroLog = require('aggro-log');
+    // create the aggroLog
+    var aggroLog = require('aggro-log')(aggroLogCfg);
     
+    // log a message at info level 10 times
     for (var i = 0; i < 10; i++) {
         aggroLog.info('it looped');
     }
@@ -25,7 +28,9 @@ A log aggregator so you can log summaries of stuff and save space.
     // Bunyan hasn't logged anything yet ...
      
     setTimeout(function () {
-        // Now, Bunyan will have logged something like:
+        // About 11 seconds later ...
+        
+        // Now, Bunyan will have logged an aggregated summary of the 10 logs done above:
         // {hostname: 'myHost', intervalCount: 10, level: 30, msg: 'it looped', logIntervalMs: 10773, name: 'my-bunyan-log', pid: 30579}
     }, 11000);
 
