@@ -31,7 +31,15 @@ A log aggregator so you can log summaries of stuff and save space.
         // About 11 seconds later ...
         
         // Now, Bunyan will have logged an aggregated summary of the 10 logs done above:
-        // {hostname: 'myHost', intervalCount: 10, level: 30, msg: 'it looped', logIntervalMs: 10773, name: 'my-bunyan-log', pid: 30579}
+        // {
+        //     "hostname": "myHost",
+        //     "intervalCount": 10,
+        //     "level": 30,
+        //     "msg": "it looped",
+        //     "logIntervalMs": 10773,
+        //     "name": "my-bunyan-log", 
+        //     "pid": 30579
+        // }
     }, 11000);
 
 ```
