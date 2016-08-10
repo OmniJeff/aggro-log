@@ -1,5 +1,5 @@
 var ConsoleLog = require('./loggers/console-logger');
-var Intercept = require('intercept-stdout');
+require('console.mute');
 
 
 var describe = require('mocha').describe;
@@ -12,53 +12,17 @@ var chai = require('chai');
 var expect = chai.expect;
 
 describe('console logger', function () {
-
-    var unhook;
-    var capturedStdout = {
-        records: []
-    };
-
-    beforeEach(function () {
-        unhook = Intercept(function (txt) {
-            capturedStdout.records.push(txt);
-        });
-    });
-
-    afterEach(function () {
-        unhook();
-        capturedStdout.records.length = 0;
-    });
-
+    
     it('works', function (done) {
+        console.mute();
         ConsoleLog.info('bunyan works');
-        expect(capturedStdout.records.length).to.be.at.least(1);
+        var capturedStdout = console.resume().stdout;
+        expect(capturedStdout.length).to.be.at.least(1);
         done();
     });
 });
 
 describe('aggregate-log using console-logger', function () {
-
-    var unhook;
-    var capturedStdout = {
-        records: []
-    };
-
-    beforeEach(function () {
-        unhook = Intercept(function (txt) {
-            capturedStdout.records.push(txt);
-        });
-    });
-
-    afterEach(function (next) {
-        
-        unhook();
-        
-        setTimeout(function () {  // intercept-stedout is a piece of junk
-            capturedStdout.records.length = 0;
-            next();
-        }, 10);
-    });
-    
     
     it('logs stuff at trace level', function (done) {
 
@@ -73,23 +37,27 @@ describe('aggregate-log using console-logger', function () {
         var msg = 'logs stuff at trace level';
 
         var fields = {};
-
-        expect(capturedStdout.records.length).to.equal(0);
+        
+        console.mute();
 
         var interval = setInterval(function () {
+            aggroLog.trace(fields, msg);
             aggroLog.trace(fields, msg);
         }, 1);
 
         setTimeout(function () {
     
             clearInterval(interval);
+            aggroLog.flush();
+            
+            var capturedStdout = console.resume().stdout;
 
-            expect(capturedStdout.records.length).to.be.at.least(2);
-            expect(capturedStdout.records.length).to.be.at.most(10);
+            expect(capturedStdout.length).to.be.at.least(2);
+            expect(capturedStdout.length).to.be.at.most(20);
 
             var logRecord;
             try {
-                logRecord = JSON.parse(capturedStdout.records[0]);
+                logRecord = JSON.parse(capturedStdout[0]);
             }
             catch (err) {
                 expect(err).to.not.exist;
@@ -99,7 +67,7 @@ describe('aggregate-log using console-logger', function () {
             expect(logRecord.msg).to.equal(msg);
             expect(logRecord.level).to.equal('trace');
             expect(logRecord.intervalCount).to.be.at.least(2);
-            expect(logRecord.intervalCount).to.be.at.most(10);
+            expect(logRecord.intervalCount).to.be.at.most(20);
             expect(logRecord.logIntervalMs).to.be.at.least(logCfg.logIntervalMs / 2);
             expect(logRecord.logIntervalMs).to.be.at.most(logCfg.logIntervalMs * 2);
             done();
@@ -121,22 +89,26 @@ describe('aggregate-log using console-logger', function () {
         
         var fields = {};
         
-        expect(capturedStdout.records.length).to.equal(0);
+        console.mute();
         
         var interval = setInterval(function () {
+            aggroLog.debug(fields, msg);
             aggroLog.debug(fields, msg);
         }, 1);
         
         setTimeout(function () {
     
             clearInterval(interval);
+            aggroLog.flush();
             
-            expect(capturedStdout.records.length).to.be.at.least(2);
-            expect(capturedStdout.records.length).to.be.at.most(10);
+            var capturedStdout = console.resume().stdout;
+            
+            expect(capturedStdout.length).to.be.at.least(2);
+            expect(capturedStdout.length).to.be.at.most(20);
             
             var logRecord;
             try {
-                logRecord = JSON.parse(capturedStdout.records[0]);
+                logRecord = JSON.parse(capturedStdout[0]);
             }
             catch (err) {
                 expect(err).to.not.exist;
@@ -146,7 +118,7 @@ describe('aggregate-log using console-logger', function () {
             expect(logRecord.msg).to.equal(msg);
             expect(logRecord.level).to.equal('debug');
             expect(logRecord.intervalCount).to.be.at.least(2);
-            expect(logRecord.intervalCount).to.be.at.most(10);
+            expect(logRecord.intervalCount).to.be.at.most(20);
             expect(logRecord.logIntervalMs).to.be.at.least(logCfg.logIntervalMs / 2);
             expect(logRecord.logIntervalMs).to.be.at.most(logCfg.logIntervalMs * 2);
             done();
@@ -168,22 +140,26 @@ describe('aggregate-log using console-logger', function () {
         
         var fields = {};
         
-        expect(capturedStdout.records.length).to.equal(0);
+        console.mute();
         
         var interval = setInterval(function () {
+            aggroLog.info(fields, msg);
             aggroLog.info(fields, msg);
         }, 1);
         
         setTimeout(function () {
     
             clearInterval(interval);
+            aggroLog.flush();
             
-            expect(capturedStdout.records.length).to.be.at.least(2);
-            expect(capturedStdout.records.length).to.be.at.most(10);
+            var capturedStdout = console.resume().stdout;
+            
+            expect(capturedStdout.length).to.be.at.least(2);
+            expect(capturedStdout.length).to.be.at.most(20);
             
             var logRecord;
             try {
-                logRecord = JSON.parse(capturedStdout.records[0]);
+                logRecord = JSON.parse(capturedStdout[0]);
             }
             catch (err) {
                 expect(err).to.not.exist;
@@ -193,7 +169,7 @@ describe('aggregate-log using console-logger', function () {
             expect(logRecord.msg).to.equal(msg);
             expect(logRecord.level).to.equal('info');
             expect(logRecord.intervalCount).to.be.at.least(2);
-            expect(logRecord.intervalCount).to.be.at.most(10);
+            expect(logRecord.intervalCount).to.be.at.most(20);
             expect(logRecord.logIntervalMs).to.be.at.least(logCfg.logIntervalMs / 2);
             expect(logRecord.logIntervalMs).to.be.at.most(logCfg.logIntervalMs * 2);
             done();
@@ -215,22 +191,26 @@ describe('aggregate-log using console-logger', function () {
         
         var fields = {};
         
-        expect(capturedStdout.records.length).to.equal(0);
+        console.mute();
         
         var interval = setInterval(function () {
+            aggroLog.warn(fields, msg);
             aggroLog.warn(fields, msg);
         }, 1);
         
         setTimeout(function () {
     
             clearInterval(interval);
+            aggroLog.flush();
             
-            expect(capturedStdout.records.length).to.be.at.least(2);
-            expect(capturedStdout.records.length).to.be.at.most(10);
+            var capturedStderr = console.resume().stderr;
+            
+            expect(capturedStderr.length).to.be.at.least(2);
+            expect(capturedStderr.length).to.be.at.most(20);
             
             var logRecord;
             try {
-                logRecord = JSON.parse(capturedStdout.records[0]);
+                logRecord = JSON.parse(capturedStderr[0]);
             }
             catch (err) {
                 expect(err).to.not.exist;
@@ -240,7 +220,7 @@ describe('aggregate-log using console-logger', function () {
             expect(logRecord.msg).to.equal(msg);
             expect(logRecord.level).to.equal('warn');
             expect(logRecord.intervalCount).to.be.at.least(2);
-            expect(logRecord.intervalCount).to.be.at.most(10);
+            expect(logRecord.intervalCount).to.be.at.most(20);
             expect(logRecord.logIntervalMs).to.be.at.least(logCfg.logIntervalMs / 2);
             expect(logRecord.logIntervalMs).to.be.at.most(logCfg.logIntervalMs * 2);
             done();
@@ -262,22 +242,26 @@ describe('aggregate-log using console-logger', function () {
         
         var fields = {};
         
-        expect(capturedStdout.records.length).to.equal(0);
+        console.mute();
         
         var interval = setInterval(function () {
+            aggroLog.error(fields, msg);
             aggroLog.error(fields, msg);
         }, 1);
         
         setTimeout(function () {
     
             clearInterval(interval);
+            aggroLog.flush();
             
-            expect(capturedStdout.records.length).to.be.at.least(2);
-            expect(capturedStdout.records.length).to.be.at.most(10);
+            var capturedStderr = console.resume().stderr;
+            
+            expect(capturedStderr.length).to.be.at.least(2);
+            expect(capturedStderr.length).to.be.at.most(20);
             
             var logRecord;
             try {
-                logRecord = JSON.parse(capturedStdout.records[0]);
+                logRecord = JSON.parse(capturedStderr[0]);
             }
             catch (err) {
                 expect(err).to.not.exist;
@@ -287,7 +271,7 @@ describe('aggregate-log using console-logger', function () {
             expect(logRecord.msg).to.equal(msg);
             expect(logRecord.level).to.equal('error');
             expect(logRecord.intervalCount).to.be.at.least(2);
-            expect(logRecord.intervalCount).to.be.at.most(10);
+            expect(logRecord.intervalCount).to.be.at.most(20);
             expect(logRecord.logIntervalMs).to.be.at.least(logCfg.logIntervalMs / 2);
             expect(logRecord.logIntervalMs).to.be.at.most(logCfg.logIntervalMs * 2);
             done();

@@ -88,9 +88,12 @@ describe('aggregate-log using bunyan logger', function () {
 
         var interval = setInterval(function () {
             aggroLog.trace(msg);
+            aggroLog.trace(msg);
         }, 1);
 
         setTimeout(function () {
+    
+            clearInterval(interval);
 
             expect(ringBuffer.records.length).to.be.at.least(2);
             expect(ringBuffer.records.length).to.be.at.most(10);
@@ -105,8 +108,6 @@ describe('aggregate-log using bunyan logger', function () {
             expect(logRecord.intervalCount).to.be.at.most(10);
             expect(logRecord.logIntervalMs).to.be.at.least(logCfg.logIntervalMs / 2);
             expect(logRecord.logIntervalMs).to.be.at.most(logCfg.logIntervalMs * 2);
-
-            clearInterval(interval);
             done();
         }, 100);
     });
@@ -127,9 +128,12 @@ describe('aggregate-log using bunyan logger', function () {
 
         var interval = setInterval(function () {
             aggregateLog.trace(msg);
+            aggregateLog.trace(msg);
         }, 1);
 
         setTimeout(function () {
+    
+            clearInterval(interval);
 
             expect(ringBuffer.records.length).to.equal(0);
 
@@ -147,8 +151,6 @@ describe('aggregate-log using bunyan logger', function () {
             expect(logRecord.intervalCount).to.be.at.most(100);
             expect(logRecord.logIntervalMs).to.be.at.least(50);
             expect(logRecord.logIntervalMs).to.be.at.most(200);
-
-            clearInterval(interval);
             done();
         }, 100);
     });
@@ -169,9 +171,12 @@ describe('aggregate-log using bunyan logger', function () {
 
         var interval = setInterval(function () {
             aggregateLog.debug(msg);
+            aggregateLog.debug(msg);
         }, 1);
 
         setTimeout(function () {
+    
+            clearInterval(interval);
 
             expect(ringBuffer.records.length).to.be.at.least(2);
             expect(ringBuffer.records.length).to.be.at.most(10);
@@ -186,8 +191,6 @@ describe('aggregate-log using bunyan logger', function () {
             expect(logRecord.intervalCount).to.be.at.most(10);
             expect(logRecord.logIntervalMs).to.be.at.least(logCfg.logIntervalMs / 2);
             expect(logRecord.logIntervalMs).to.be.at.most(logCfg.logIntervalMs * 2);
-
-            clearInterval(interval);
             done();
         }, 100);
     });
@@ -208,9 +211,12 @@ describe('aggregate-log using bunyan logger', function () {
 
         var interval = setInterval(function () {
             aggregateLog.info(msg);
+            aggregateLog.info(msg);
         }, 1);
 
         setTimeout(function () {
+    
+            clearInterval(interval);
 
             expect(ringBuffer.records.length).to.be.at.least(2);
             expect(ringBuffer.records.length).to.be.at.most(10);
@@ -225,8 +231,6 @@ describe('aggregate-log using bunyan logger', function () {
             expect(logRecord.intervalCount).to.be.at.most(10);
             expect(logRecord.logIntervalMs).to.be.at.least(logCfg.logIntervalMs / 2);
             expect(logRecord.logIntervalMs).to.be.at.most(logCfg.logIntervalMs * 2);
-
-            clearInterval(interval);
             done();
         }, 100);
     });
@@ -247,9 +251,12 @@ describe('aggregate-log using bunyan logger', function () {
 
         var interval = setInterval(function () {
             aggregateLog.warn(msg);
+            aggregateLog.warn(msg);
         }, 1);
 
         setTimeout(function () {
+    
+            clearInterval(interval);
 
             expect(ringBuffer.records.length).to.be.at.least(2);
             expect(ringBuffer.records.length).to.be.at.most(10);
@@ -264,8 +271,6 @@ describe('aggregate-log using bunyan logger', function () {
             expect(logRecord.intervalCount).to.be.at.most(10);
             expect(logRecord.logIntervalMs).to.be.at.least(logCfg.logIntervalMs / 2);
             expect(logRecord.logIntervalMs).to.be.at.most(logCfg.logIntervalMs * 2);
-
-            clearInterval(interval);
             done();
         }, 100);
     });
@@ -286,9 +291,12 @@ describe('aggregate-log using bunyan logger', function () {
 
         var interval = setInterval(function () {
             aggregateLog.error(msg);
+            aggregateLog.error(msg);
         }, 1);
 
         setTimeout(function () {
+    
+            clearInterval(interval);
 
             expect(ringBuffer.records.length).to.be.at.least(2);
             expect(ringBuffer.records.length).to.be.at.most(10);
@@ -303,8 +311,6 @@ describe('aggregate-log using bunyan logger', function () {
             expect(logRecord.intervalCount).to.be.at.most(10);
             expect(logRecord.logIntervalMs).to.be.at.least(logCfg.logIntervalMs / 2);
             expect(logRecord.logIntervalMs).to.be.at.most(logCfg.logIntervalMs * 2);
-
-            clearInterval(interval);
             done();
         }, 100);
     });
@@ -325,9 +331,12 @@ describe('aggregate-log using bunyan logger', function () {
 
         var interval = setInterval(function () {
             aggregateLog.error({foo: 'bar'}, 'logs fields');
+            aggregateLog.error({foo: 'bar'}, 'logs fields');
         }, 1);
 
         setTimeout(function () {
+    
+            clearInterval(interval);
 
             expect(ringBuffer.records.length).to.be.at.least(2);
             expect(ringBuffer.records.length).to.be.at.most(10);
@@ -343,8 +352,6 @@ describe('aggregate-log using bunyan logger', function () {
             expect(logRecord.logIntervalMs).to.be.at.least(logCfg.logIntervalMs / 2);
             expect(logRecord.logIntervalMs).to.be.at.most(logCfg.logIntervalMs * 2);
             expect(logRecord.foo).to.equal('bar');
-
-            clearInterval(interval);
             done();
         }, 100);
     });
@@ -368,10 +375,14 @@ describe('aggregate-log using bunyan logger', function () {
 
         var interval = setInterval(function () {
             aggregateLog.error({foo: 'bar'}, logMsg, calculateKey);
+            aggregateLog.error({foo: 'bar'}, logMsg, calculateKey);
+            aggregateLog.error({baz: 'corn'}, logMsg, calculateKey);
             aggregateLog.error({baz: 'corn'}, logMsg, calculateKey);
         }, 1);
 
         setTimeout(function () {
+    
+            clearInterval(interval);
 
             expect(ringBuffer.records.length).to.be.at.least(12);
             expect(ringBuffer.records.length).to.be.at.most(20);
@@ -395,8 +406,6 @@ describe('aggregate-log using bunyan logger', function () {
             expect(secondLogRecord.intervalCount).to.be.at.least(2);
             expect(secondLogRecord.intervalCount).to.be.at.most(10);
             expect(secondLogRecord.baz).to.equal('corn');
-
-            clearInterval(interval);
             done();
         }, 100);
     });
@@ -419,10 +428,14 @@ describe('aggregate-log using bunyan logger', function () {
 
         var interval = setInterval(function () {
             aggregateLog.error({foo: 'bar', bing: 'bong'}, logMsg, calculateKey);
+            aggregateLog.error({foo: 'bar', bing: 'bong'}, logMsg, calculateKey);
+            aggregateLog.error({baz: 'corn', bing: 'bong'}, logMsg, calculateKey);
             aggregateLog.error({baz: 'corn', bing: 'bong'}, logMsg, calculateKey);
         }, 1);
 
         setTimeout(function () {
+    
+            clearInterval(interval);
 
             expect(ringBuffer.records.length).to.be.at.least(12);
             expect(ringBuffer.records.length).to.be.at.most(20);
@@ -448,8 +461,6 @@ describe('aggregate-log using bunyan logger', function () {
             expect(secondLogRecord.intervalCount).to.be.at.most(10);
             expect(secondLogRecord.baz).to.equal('corn');
             expect(secondLogRecord.bing).to.not.exist;
-
-            clearInterval(interval);
             done();
         }, 100);
     });
@@ -469,10 +480,14 @@ describe('aggregate-log using bunyan logger', function () {
 
         var interval = setInterval(function () {
             aggregateLog.error({foo: 'bar'}, logMsg1, calculateKey);
+            aggregateLog.error({foo: 'bar'}, logMsg1, calculateKey);
+            aggregateLog.error({baz: 'corn'}, logMsg2, calculateKey);
             aggregateLog.error({baz: 'corn'}, logMsg2, calculateKey);
         }, 1);
 
         setTimeout(function () {
+    
+            clearInterval(interval);
 
             expect(ringBuffer.records.length).to.be.at.least(2);
             expect(ringBuffer.records.length).to.be.at.most(10);
@@ -485,8 +500,6 @@ describe('aggregate-log using bunyan logger', function () {
                 expect(element.foo).to.equal('bar');
                 expect(element.baz).to.not.exist;
             });
-
-            clearInterval(interval);
             done();
         }, 100);
     });
