@@ -30,7 +30,8 @@ A log aggregator so you can log summaries of stuff and save space.
     setTimeout(function () {
         // About 11 seconds later ...
         
-        // Now, Bunyan will have logged an aggregated summary of the 10 logs done above:
+        // Now, Bunyan will have logged an aggregated summary of the 10 logs done above,
+        // indicating that 'it looped' was logged 10 times in 10.773 seconds:
         // {
         //     "hostname": "myHost",
         //     "intervalCount": 10,
