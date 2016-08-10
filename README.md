@@ -14,7 +14,7 @@ A log aggregator so you can log summaries of stuff and save space.
             name: 'my-bunyan-log'
         }),
         logType: 'bunyan',
-        logIntervalMs: 10000,  // emit log summary after 10 seconds
+        logIntervalMs: 10000,  // emit aggregated log messages every 10 seconds
     };
     
     // create the aggroLog
