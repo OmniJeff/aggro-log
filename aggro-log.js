@@ -100,7 +100,6 @@ internals.emitLogMsg = function (log, msgKey) {
     var aggregatedLog = log.logs[msgKey];
     var level = aggregatedLog.level;
     var fields = aggregatedLog.fields;
-    var msg = aggregatedLog.msg;
     
     var fieldsToLog = {
         logIntervalMs: new Date() - aggregatedLog.intervalStartTime,
@@ -108,23 +107,33 @@ internals.emitLogMsg = function (log, msgKey) {
         level: level
     };
     
-    Hoek.merge(fieldsToLog,  fields);
+    // fields.logAggregatorMsg no longer needed -- only used for hash generation
+    delete fields.logAggregatorMsg;
+    
+    Hoek.merge(fieldsToLog, fields);
+    
+    if (fieldsToLog.hasOwnProperty('msg')) {
+        fieldsToLog.logAggregatorMsg = aggregatedLog.msg;
+    }
+    else {
+        fieldsToLog.msg = aggregatedLog.msg;
+    }
 
     switch (level) {
         case 'trace':
-            logger.trace(fieldsToLog, msg);
+            logger.trace(fieldsToLog);
             break;
         case 'debug':
-            logger.debug(fieldsToLog, msg);
+            logger.debug(fieldsToLog);
             break;
         case 'info':
-            logger.info(fieldsToLog, msg);
+            logger.info(fieldsToLog);
             break;
         case 'warn':
-            logger.warn(fieldsToLog, msg);
+            logger.warn(fieldsToLog);
             break;
         case 'error':
-            logger.error(fieldsToLog, msg);
+            logger.error(fieldsToLog);
             break;
     }
 
@@ -136,11 +145,13 @@ internals.getHash = function (msg, fields, replacer) {
 
     // replacer is optional and can be a string or function
     if (typeof replacer === 'string') {
+        
+        var replacementString = replacer;
 
         replacer = function () {
 
             return {
-                logAggregatorMsg: replacer
+                logAggregatorMsg: replacementString
             };
         }
     }

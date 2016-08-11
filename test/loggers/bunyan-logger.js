@@ -11,6 +11,11 @@ exports.createLogger = function () {
         logger: Bunyan.createLogger({
             name: 'bunyan-test-logger',
             streams: [
+                // uncomment to debug tests using stdout
+                // {
+                //     level: 'trace',
+                //     stream: process.stdout
+                // },
                 {
                     level: 'trace',
                     type: 'raw',

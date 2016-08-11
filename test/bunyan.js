@@ -314,38 +314,80 @@ describe('aggregate-log using bunyan logger', function () {
             done();
         }, 100);
     });
-
+    
     it('logs fields', function (done) {
-
+        
         var logCfg = {
             logIntervalMs: 10,
             logger: log,
             logType: 'bunyan'
         };
-
+        
         var aggregateLog = require('../aggro-log')(logCfg);
-
+        
         var msg = 'logs fields';
-
+        
         expect(ringBuffer.records.length).to.equal(0);
-
+        
         var interval = setInterval(function () {
             aggregateLog.error({foo: 'bar'}, 'logs fields');
             aggregateLog.error({foo: 'bar'}, 'logs fields');
         }, 1);
-
+        
         setTimeout(function () {
-    
+            
             clearInterval(interval);
-
+            
             expect(ringBuffer.records.length).to.be.at.least(2);
             expect(ringBuffer.records.length).to.be.at.most(10);
-
+            
             var logRecord = ringBuffer.records[0];
-
+            
             expect(logRecord).to.exist;
             expect(logRecord.name).to.equal('bunyan-test-logger');
             expect(logRecord.msg).to.equal(msg);
+            expect(logRecord.level).to.equal(50);
+            expect(logRecord.intervalCount).to.be.at.least(2);
+            expect(logRecord.intervalCount).to.be.at.most(10);
+            expect(logRecord.logIntervalMs).to.be.at.least(logCfg.logIntervalMs / 2);
+            expect(logRecord.logIntervalMs).to.be.at.most(logCfg.logIntervalMs * 2);
+            expect(logRecord.foo).to.equal('bar');
+            done();
+        }, 100);
+    });
+    
+    it('logs fields when fields.msg is present', function (done) {
+        
+        var logCfg = {
+            logIntervalMs: 10,
+            logger: log,
+            logType: 'bunyan'
+        };
+        
+        var aggregateLog = require('../aggro-log')(logCfg);
+        
+        var msg = 'logs fields when fields.msg is present';
+        
+        expect(ringBuffer.records.length).to.equal(0);
+        
+        var interval = setInterval(function () {
+            aggregateLog.error({foo: 'bar', msg: 'otherMsg'}, msg);
+            aggregateLog.error({foo: 'bar', msg: 'otherMsg'}, msg);
+        }, 1);
+        
+        setTimeout(function () {
+            
+            clearInterval(interval);
+            
+            expect(ringBuffer.records.length).to.be.at.least(2);
+            expect(ringBuffer.records.length).to.be.at.most(10);
+            
+            var logRecord = ringBuffer.records[0];
+            
+            expect(logRecord).to.exist;
+            expect(logRecord.name).to.equal('bunyan-test-logger');
+            expect(logRecord.logAggregatorMsg).to.equal(msg);
+            expect(logRecord.msg).to.equal('otherMsg');
             expect(logRecord.level).to.equal(50);
             expect(logRecord.intervalCount).to.be.at.least(2);
             expect(logRecord.intervalCount).to.be.at.most(10);
