@@ -28,10 +28,12 @@
     "bunyan": "^1.8.1",
     "hoek": "~4.0.2",
     "joi": "^9.0.4",
-    "object-hash": "^1.1.4"
+    "object-hash": "^1.1.4",
+    "pino": "^2.8.1"
   },
   "devDependencies": {
     "chai": "~3.5.0",
+    "concat-stream": "^1.5.1",
     "console.mute": "^0.3.0",
     "mocha": "~2.5.3",
     "nyc": "~7.1.0"

@@ -1,12 +1,27 @@
-// Bunyan is one supported log type
-var bunyan = require('bunyan').createLogger({
-    name: 'my-bunyan-log'
-});
+var stream = require('stream');
+var util = require('util');
+
+var buffer = [];
+
+function EchoStream () {
+    stream.Writable.call(this);
+}
+
+util.inherits(EchoStream, stream.Writable);
+
+EchoStream.prototype._write = function (chunk, encoding, done) {
+    buffer.push(chunk.toString());
+    done();
+};
+
+var myStream = new EchoStream();
+
+var pino = require('pino')({ name: 'myapp', encoding: 'string' }, myStream);
 
 // configure aggroLog
 var aggroLogCfg = {
-    logger: bunyan,
-    logType: 'bunyan',
+    logger: pino,
+    logType: 'pino',
     logIntervalMs: 3000  // emit aggregated log messages every 3 seconds
 };
 
@@ -22,7 +37,7 @@ for (var i = 0; i < 10; i++) {
 
 setTimeout(function () {
     // About 4 seconds later ...
-    
+
     // Now, pino will have logged an aggregated summary of the 10 logs done above,
     // indicating that 'it looped' was logged 10 times in 4.005 seconds:
     // {

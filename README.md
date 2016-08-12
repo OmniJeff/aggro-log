@@ -46,9 +46,9 @@ A log aggregator so you can log summaries of stuff and save space.
 
 ```
 
-### Supported loggers
+## Supported loggers
 
-## console
+### console
 ```javascript
     // configure aggroLog
     var aggroLogCfg = {

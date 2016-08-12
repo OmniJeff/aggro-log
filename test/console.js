@@ -24,6 +24,14 @@ describe('console logger', function () {
 
 describe('aggregate-log using console-logger', function () {
     
+    afterEach(function (next) {
+        console.mute();
+        setTimeout(function () {
+            console.resume();
+            next();
+        },  100);
+    });
+    
     it('logs stuff at trace level', function (done) {
 
         var logCfg = {
@@ -39,7 +47,8 @@ describe('aggregate-log using console-logger', function () {
         var fields = {};
         
         console.mute();
-
+    
+        aggroLog.flush();
         var interval = setInterval(function () {
             aggroLog.trace(fields, msg);
             aggroLog.trace(fields, msg);
@@ -48,7 +57,6 @@ describe('aggregate-log using console-logger', function () {
         setTimeout(function () {
     
             clearInterval(interval);
-            aggroLog.flush();
             
             var capturedStdout = console.resume().stdout;
 
@@ -90,7 +98,8 @@ describe('aggregate-log using console-logger', function () {
         var fields = {};
         
         console.mute();
-        
+    
+        aggroLog.flush();
         var interval = setInterval(function () {
             aggroLog.debug(fields, msg);
             aggroLog.debug(fields, msg);
@@ -99,7 +108,6 @@ describe('aggregate-log using console-logger', function () {
         setTimeout(function () {
     
             clearInterval(interval);
-            aggroLog.flush();
             
             var capturedStdout = console.resume().stdout;
             
@@ -141,7 +149,8 @@ describe('aggregate-log using console-logger', function () {
         var fields = {};
         
         console.mute();
-        
+    
+        aggroLog.flush();
         var interval = setInterval(function () {
             aggroLog.info(fields, msg);
             aggroLog.info(fields, msg);
@@ -150,7 +159,6 @@ describe('aggregate-log using console-logger', function () {
         setTimeout(function () {
     
             clearInterval(interval);
-            aggroLog.flush();
             
             var capturedStdout = console.resume().stdout;
             
@@ -192,6 +200,7 @@ describe('aggregate-log using console-logger', function () {
         var fields = {};
         
         console.mute();
+        aggroLog.flush();
         
         var interval = setInterval(function () {
             aggroLog.warn(fields, msg);
@@ -201,7 +210,6 @@ describe('aggregate-log using console-logger', function () {
         setTimeout(function () {
     
             clearInterval(interval);
-            aggroLog.flush();
             
             var capturedStderr = console.resume().stderr;
             
@@ -243,6 +251,7 @@ describe('aggregate-log using console-logger', function () {
         var fields = {};
         
         console.mute();
+        aggroLog.flush();
         
         var interval = setInterval(function () {
             aggroLog.error(fields, msg);
@@ -252,7 +261,6 @@ describe('aggregate-log using console-logger', function () {
         setTimeout(function () {
     
             clearInterval(interval);
-            aggroLog.flush();
             
             var capturedStderr = console.resume().stderr;
             

@@ -21,7 +21,7 @@ module.exports = function (cfg) {
     var settingsSchema = Joi.object().keys({
         logIntervalMs: Joi.number().integer().min(1),
         logger: Joi.object(),
-        logType: Joi.string().regex(/\bconsole|\bbunyan/)
+        logType: Joi.string().regex(/\bconsole|\bbunyan|\bpino/)
     }).with('logIntervalMs', 'logger', 'logType');
 
     settings = Joi.validate(settings, settingsSchema, function (err, validatedSettings) {
