@@ -20,6 +20,10 @@
     "log",
     "aggregator",
     "logging",
+    "logger",
+    "bunyan",
+    "pino",
+    "console",
     "aggro"
   ],
   "author": "Jeffrey White",
